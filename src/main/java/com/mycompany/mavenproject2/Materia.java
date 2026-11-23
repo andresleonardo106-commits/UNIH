@@ -16,6 +16,7 @@ class Materia {
     public Materia(String nombre){
         this.nombre=nombre;
         this.opcionesNRC=new ArrayList<>();  
+        
         }  
     public String getnombre(){
         return nombre;
