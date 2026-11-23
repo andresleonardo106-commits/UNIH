@@ -1,0 +1,552 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniHorario</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+    padding: 25px;
+}
+
+header {
+    background: linear-gradient(135deg, #123b32, #176b52);
+    color: white;
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #d1fae5;
+}
+
+.contenedor {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.paneles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.panel {
+    background: white;
+    padding: 23px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px #0000000b;
+    margin-bottom: 22px;
+}
+
+h2 {
+    font-size: 21px;
+    margin-bottom: 18px;
+    color: #14513e;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 13px 0 7px;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+}
+
+input:focus, select:focus {
+    outline: 2px solid #7bc5a6;
+    border-color: #176b52;
+}
+
+button {
+    border: none;
+    padding: 12px 17px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.btn-principal {
+    background: #176b52;
+    color: white;
+    width: 100%;
+}
+
+.btn-principal:hover {
+    background: #10513e;
+}
+
+.btn-generar {
+    background: #1d4ed8;
+    color: white;
+    width: 100%;
+    font-size: 16px;
+    padding: 15px;
+}
+
+.btn-eliminar {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 8px 12px;
+    margin-top: 10px;
+}
+
+.nrc-card {
+    background: #f8fafc;
+    border: 1px solid #dbe4ec;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 14px;
+}
+
+.nrc-card h3 {
+    color: #176b52;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.materia-card {
+    border: 1px solid #dbe4ec;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 13px;
+}
+
+.materia-card h3 {
+    color: #14513e;
+    margin-bottom: 8px;
+}
+
+.detalle {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.resultado {
+    background: #f8fafc;
+    border: 1px solid #dbe4ec;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 13px;
+}
+
+.resultado h3 {
+    color: #176b52;
+    margin-bottom: 10px;
+}
+
+.mensaje {
+    color: #64748b;
+    font-size: 14px;
+    padding: 12px 0;
+}
+
+.oculto {
+    display: none;
+}
+
+@media (max-width: 750px) {
+    body {
+        padding: 12px;
+    }
+
+    .paneles {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<header>
+    <h1>UniHorario</h1>
+    <p>Organizador de horarios universitarios</p>
+</header>
+
+<div class="paneles">
+
+<section class="panel">
+    <h2>Registrar materia</h2>
+
+    <label for="nombreMateria">Nombre de la materia</label>
+    <input type="text" id="nombreMateria"
+           placeholder="Ejemplo: Cálculo">
+
+    <label for="cantidadNRC">¿Cuántos NRC vas a registrar?</label>
+    <select id="cantidadNRC">
+        <option value="">Selecciona una cantidad</option>
+        <option value="1">1 NRC</option>
+        <option value="2">2 NRC</option>
+        <option value="3">3 NRC</option>
+        <option value="4">4 NRC</option>
+        <option value="5">5 NRC</option>
+        <option value="6">6 NRC</option>
+        <option value="7">7 NRC</option>
+        <option value="8">8 NRC</option>
+    </select>
+
+    <div id="espaciosNRC"></div>
+
+    <button class="btn-principal" id="btnGuardar">
+        Guardar materia
+    </button>
+</section>
+
+<section class="panel">
+    <h2>Materias registradas</h2>
+
+    <div id="listaMaterias">
+        <p class="mensaje">
+            Todavía no has registrado materias.
+        </p>
+    </div>
+</section>
+
+</div>
+
+<section class="panel">
+    <h2>Generar horarios</h2>
+    <p class="mensaje">
+        UniHorario combinará los NRC registrados y buscará
+        opciones que no tengan cruces entre clases.
+    </p>
+
+    <button class="btn-generar" id="btnGenerar">
+        Generar horarios
+    </button>
+
+    <div id="resultados" style="margin-top:20px;"></div>
+</section>
+
+</div>
+
+<script>
+
+let materias = [];
+
+const nombreMateria = document.getElementById("nombreMateria");
+const cantidadNRC = document.getElementById("cantidadNRC");
+const espaciosNRC = document.getElementById("espaciosNRC");
+const listaMaterias = document.getElementById("listaMaterias");
+const resultados = document.getElementById("resultados");
+
+function escapar(texto) {
+    return String(texto).replace(/[&<>"']/g, function(letra) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[letra];
+    });
+}
+
+// Crear los espacios de los NRC
+cantidadNRC.addEventListener("change", function() {
+
+    espaciosNRC.innerHTML = "";
+
+    const cantidad = Number(cantidadNRC.value);
+
+    for (let i = 1; i <= cantidad; i++) {
+
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "nrc-card";
+
+        tarjeta.innerHTML = `
+            <h3>NRC ${i}</h3>
+
+            <label>Código del NRC</label>
+            <input type="text" class="codigoNRC"
+                   placeholder="Ejemplo: 1234">
+
+            <label>Día de clase</label>
+            <select class="diaNRC">
+                <option value="">Selecciona el día</option>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+
+            <label>Hora de inicio</label>
+            <input type="time" class="inicioNRC">
+
+            <label>Hora de finalización</label>
+            <input type="time" class="finNRC">
+        `;
+
+        espaciosNRC.appendChild(tarjeta);
+    }
+});
+
+// Guardar una materia
+document.getElementById("btnGuardar").addEventListener("click", function() {
+
+    const nombre = nombreMateria.value.trim();
+    const cantidad = Number(cantidadNRC.value);
+
+    if (nombre === "" || cantidad === 0) {
+        alert("Escribe el nombre de la materia y selecciona la cantidad de NRC.");
+        return;
+    }
+
+    const codigos = document.querySelectorAll(".codigoNRC");
+    const dias = document.querySelectorAll(".diaNRC");
+    const inicios = document.querySelectorAll(".inicioNRC");
+    const finales = document.querySelectorAll(".finNRC");
+
+    let opciones = [];
+
+    for (let i = 0; i < cantidad; i++) {
+
+        const codigo = codigos[i].value.trim();
+        const dia = dias[i].value;
+        const inicio = inicios[i].value;
+        const fin = finales[i].value;
+
+        if (codigo === "" || dia === "" || inicio === "" || fin === "") {
+            alert("Completa todos los datos de los NRC.");
+            return;
+        }
+
+        if (inicio >= fin) {
+            alert("La hora de finalización debe ser posterior a la de inicio.");
+            return;
+        }
+
+        opciones.push({
+            codigo: codigo,
+            dia: dia,
+            inicio: inicio,
+            fin: fin
+        });
+    }
+
+    materias.push({
+        nombre: nombre,
+        opcionesNRC: opciones
+    });
+
+    mostrarMaterias();
+
+    // Limpiar el formulario sin borrar las materias guardadas
+    nombreMateria.value = "";
+    cantidadNRC.value = "";
+    espaciosNRC.innerHTML = "";
+
+    resultados.innerHTML = "";
+
+    alert("Materia guardada correctamente.");
+});
+
+// Mostrar materias guardadas
+function mostrarMaterias() {
+
+    listaMaterias.innerHTML = "";
+
+    if (materias.length === 0) {
+        listaMaterias.innerHTML =
+            '<p class="mensaje">Todavía no has registrado materias.</p>';
+        return;
+    }
+
+    materias.forEach(function(materia, indice) {
+
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "materia-card";
+
+        let detalle = "";
+
+        materia.opcionesNRC.forEach(function(nrc) {
+            detalle += `
+                <div class="detalle">
+                    NRC ${escapar(nrc.codigo)} |
+                    ${escapar(nrc.dia)} |
+                    ${nrc.inicio} - ${nrc.fin}
+                </div>
+            `;
+        });
+
+        tarjeta.innerHTML = `
+            <h3>${escapar(materia.nombre)}</h3>
+            ${detalle}
+            <button class="btn-eliminar" data-indice="${indice}">
+                Eliminar materia
+            </button>
+        `;
+
+        listaMaterias.appendChild(tarjeta);
+    });
+}
+
+// Eliminar una materia
+listaMaterias.addEventListener("click", function(evento) {
+
+    if (evento.target.classList.contains("btn-eliminar")) {
+
+        const indice = Number(evento.target.dataset.indice);
+
+        materias.splice(indice, 1);
+
+        mostrarMaterias();
+        resultados.innerHTML = "";
+    }
+});
+
+// Revisar si dos NRC se cruzan
+function seCruza(nrc1, nrc2) {
+
+    if (nrc1.dia !== nrc2.dia) {
+        return false;
+    }
+
+    return nrc1.inicio < nrc2.fin &&
+           nrc1.fin > nrc2.inicio;
+}
+
+// Revisar si un NRC cabe en el horario actual
+function horarioValido(horario, nuevo) {
+
+    for (let nrc of horario) {
+
+        if (seCruza(nrc, nuevo)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Generar combinaciones de horarios
+function generarHorarios() {
+
+    resultados.innerHTML = "";
+
+    if (materias.length === 0) {
+        resultados.innerHTML =
+            '<p class="mensaje">Primero debes registrar materias.</p>';
+        return;
+    }
+
+    let horariosEncontrados = [];
+    let horarioActual = [];
+
+    function buscar(posicion) {
+
+        if (horariosEncontrados.length >= 100) {
+            return;
+        }
+
+        if (posicion === materias.length) {
+            horariosEncontrados.push([...horarioActual]);
+            return;
+        }
+
+        const materia = materias[posicion];
+
+        for (let nrc of materia.opcionesNRC) {
+
+            if (horarioValido(horarioActual, nrc)) {
+
+                horarioActual.push({
+                    ...nrc,
+                    materia: materia.nombre
+                });
+
+                buscar(posicion + 1);
+
+                horarioActual.pop();
+            }
+        }
+    }
+
+    buscar(0);
+
+    if (horariosEncontrados.length === 0) {
+
+        resultados.innerHTML = `
+            <p class="mensaje">
+                No se encontraron horarios sin cruces.
+                Revisa los NRC registrados.
+            </p>
+        `;
+
+        return;
+    }
+
+    resultados.innerHTML = `
+        <h2>Se encontraron ${horariosEncontrados.length}
+        opciones de horario</h2>
+    `;
+
+    horariosEncontrados.forEach(function(horario, indice) {
+
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "resultado";
+
+        let contenido = `<h3>Horario ${indice + 1}</h3>`;
+
+        horario.forEach(function(nrc) {
+
+            contenido += `
+                <div class="detalle">
+                    <strong>${escapar(nrc.materia)}</strong> -
+                    NRC ${escapar(nrc.codigo)} |
+                    ${escapar(nrc.dia)} |
+                    ${nrc.inicio} - ${nrc.fin}
+                </div>
+            `;
+        });
+
+        tarjeta.innerHTML = contenido;
+
+        resultados.appendChild(tarjeta);
+    });
+}
+
+document.getElementById("btnGenerar").addEventListener("click", generarHorarios);
+
+</script>
+
+</body>
+</html>
